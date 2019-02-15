@@ -11,17 +11,17 @@ len(kodeData[lineNumber]) == int(kodeData[1][0]) and len(kodeData[lineNumber-1])
 
 """ --- Exercise 2.3 Advanced --- """
 
-# create empty list for elements of 10x10 iteration blocks
-kodeDataSums = [[0 for row in range(10)] for col in range(10)]
+# invoke empty list for elements of 10x10 iteration blocks
+kodeDataSums = [[0 for row in range(int(kodeData[1][0]))] for col in range(int(kodeData[1][0]))]
 xSum = 0
 
 # fill list with summarized values from iteration blocks
 for i in range(len(itDataStartRow)):
     xSum += float(kodeData[itDataStartRow[i]-1][0])
-    for j in range(10):
-        for k in range(10):
+    for j in range(int(kodeData[1][0])):
+        for k in range(int(kodeData[1][0])):
             kodeDataSums[j][k] += float(kodeData[itDataStartRow[i]+j][k])
-            
+
 # write sums to kodeData-Sums.dat
 with open("kodeData-Sums.dat", "w") as f:
     f.write(str(xSum) + "\n")
