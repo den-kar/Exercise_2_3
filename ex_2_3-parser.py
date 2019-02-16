@@ -12,7 +12,7 @@ args = parser.parse_args()
 # get data from file stored in args.file, default = kodeData.dat
 with open("{}".format(args.file), "r") as f:
     kodeData = [line.split() for line in f]
-# save frame values from data source
+# save framing values for iteration-blocks from data sourcefile args.file (default: kodeData.dat) 
 nameSubdirectory = kodeData[0][0]
 iterBlockLineLength = int(kodeData[1][0])
 iterStepLineLength = len(kodeData[2])
@@ -22,25 +22,15 @@ itDataStartRow = [lineNumber for lineNumber in range(1, len(kodeData)) if \
 len(kodeData[lineNumber]) == iterBlockLineLength and len(kodeData[lineNumber-1]) == iterStepLineLength]
 
 
+# write each iteration-block to a seperate files SOURCEFILE_iter#.dat
 def saveIterationsToFiles():
-# check if subdirectory exists, create if it doens't
-    try:
-        os.mkdir(nameSubdirectory)
-    except Exception:
-        pass
-# write data to "kodeD#.dat" (Format: ". . ."\n, ". . "\n, ...)
     for i in range(numberOfIterBlocks):
-        with open(os.path.join(os.path.abspath(nameSubdirectory), "kodeD{}.dat".format(i+1)), "w") as f:
+        with open(os.path.join(os.path.abspath(nameSubdirectory), "{}_iter{}.dat".format(args.file, i+1)), "w") as f:
             f.writelines(line for line in (\
     [" ".join(line) + "\n" for line in kodeData][int(itDataStartRow[i]):(int(itDataStartRow[i])+iterBlockLineLength)]))
-"""        print ("{} iterations saved in kodeD{}.dat - step size: {}".format(iterBlockLineLength, i+1, kodeData[itDataStartRow[i]-1]))
-"""
+
+# write sum of iterations to SOURCEFILE_sums.dat
 def saveIterationsSums():
-# check if subdirectory exists, create if it doens't
-    try:
-        os.mkdir(nameSubdirectory)
-    except Exception:
-        pass
 # invoke empty list for elements of 10x10 iteration blocks
     kodeDataSums = [[0 for row in range(iterBlockLineLength)] for col in range(iterBlockLineLength)]
     xSum = 0
@@ -51,11 +41,19 @@ def saveIterationsSums():
             for k in range(iterBlockLineLength):
                 kodeDataSums[j][k] += float(kodeData[itDataStartRow[i]+j][k])
 # write sums to kodeData-Sums.dat
-    with open(os.path.join(os.path.abspath(nameSubdirectory), "kodeData-Sums.dat"), "w") as f:
+    with open(os.path.join(os.path.abspath(nameSubdirectory), "{}_sums.dat".format(args.file)), "w") as f:
         f.write(str(xSum) + "\n")
         f.writelines(line for line in [str(line) + "\n" for line in kodeDataSums])
+
+# check if subdirectory exists, create if it doens't
+def checkDirExist():
+    try:
+        os.mkdir(nameSubdirectory)
+    except Exception:
+        pass
         
 def main(split, sums):
+    checkDirExist()
     if split == False and sums == False:
         saveIterationsToFiles()    
         saveIterationsSums()
@@ -65,3 +63,4 @@ def main(split, sums):
         saveIterationsSums()
 
 main(args.split, args.sums)
+
