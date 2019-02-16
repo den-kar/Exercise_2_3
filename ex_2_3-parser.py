@@ -5,14 +5,14 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="type source file | default = kodeData.dat")
-parser.add_argument("--cut", "-c", action="store_true", help="ONLY cut iteration-blocks and save to seperate files")
-parser.add_argument("--sum", "-s", action="store_true", help="ONLY save file with sum of interation-blocks")
+parser.add_argument("--cut", "-c", action="store_true", help="ONLY cut iteration-blocks and save in seperate files")
+parser.add_argument("--sum", "-s", action="store_true", help="ONLY save interation-block with sums of interation-blocks")
 args = parser.parse_args()
 
 # get data from sourcefile stored in args.file, default = kodeData.dat
 with open("{}".format(args.file), "r") as f:
     kodeData = [line.split() for line in f]
-# save framing values for iteration-blocks from data sourcefile args.file (default: kodeData.dat) 
+# save framing values for iteration-blocks from data sourcefile args.file 
 nameSubdirectory = os.path.abspath(kodeData[0][0])
 iterBlockLineLength = int(kodeData[1][0])
 iterStepLineLength = len(kodeData[2])
@@ -36,7 +36,7 @@ def saveIterationsToFiles():
     [" ".join(line) + "\n" for line in kodeData][int(itDataStartRow[i]):(int(itDataStartRow[i])+iterBlockLineLength)]))
 
 # write sum of iterations to SOURCEFILE_sums.dat
-def saveIterationsSums():
+def saveIterationSums():
 # invoke empty list for elements of 10x10 iteration blocks
     kodeDataSums = [[0 for row in range(iterBlockLineLength)] for col in range(iterBlockLineLength)]
     xSum = 0
@@ -51,14 +51,15 @@ def saveIterationsSums():
         f.write(str(xSum) + "\n")
         f.writelines(line for line in [str(line) + "\n" for line in kodeDataSums])
       
-def main(cut, sum):
+def main(cutIterations, sumIterations):
     checkDirExist()
-    if cut == False and sum == False:
+    if cutIterations == False and sumIterations == False:
         saveIterationsToFiles()    
-        saveIterationsSums()
-    elif cut == True:
+        saveIterationSums()
+    elif cutIterations == True:
         saveIterationsToFiles()
-    elif sum == True:
-        saveIterationsSums()
+    elif sumIterations == True:
+        saveIterationSums()
 
 main(args.cut, args.sum)
+
