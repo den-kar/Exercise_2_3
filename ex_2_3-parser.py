@@ -4,9 +4,9 @@ import os.path
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="mandatory input: type source file")
-parser.add_argument("--split", "-sp", action="store_true", help="get split files for iterations only")
-parser.add_argument("--sums", "-sum", action="store_true", help="get sum file of iterations only")
+parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="type source file | default = kodeData.dat")
+parser.add_argument("--cut", "-c", action="store_true", help="ONLY cut iteration-blocks and save to seperate files")
+parser.add_argument("--sum", "-s", action="store_true", help="ONLY save file with sum of interation-blocks")
 args = parser.parse_args()
 
 # get data from file stored in args.file, default = kodeData.dat
@@ -52,15 +52,15 @@ def checkDirExist():
     except Exception:
         pass
         
-def main(split, sums):
+def main(cut, sum):
     checkDirExist()
-    if split == False and sums == False:
+    if cut == False and sum == False:
         saveIterationsToFiles()    
         saveIterationsSums()
-    elif split == True:
+    elif cut == True:
         saveIterationsToFiles()
-    elif sums == True:
+    elif sum == True:
         saveIterationsSums()
 
-main(args.split, args.sums)
+main(args.cut, args.sum)
 
