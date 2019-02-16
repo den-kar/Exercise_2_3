@@ -35,9 +35,9 @@ def saveIterationsToFiles():
             f.writelines(line for line in (\
     [" ".join(line) + "\n" for line in kodeData][int(itDataStartRow[i]):(int(itDataStartRow[i])+iterBlockLineLength)]))
 
-# write sum of iterations to SOURCEFILE_sums.dat
+# write a list filled with sums of iterations to SOURCEFILE_sums.dat
 def saveIterationSums():
-# invoke empty list for elements of 10x10 iteration blocks
+# invoke empty list with len(iteration-block) x len(iteration-block) elements
     kodeDataSums = [[0 for row in range(iterBlockLineLength)] for col in range(iterBlockLineLength)]
     xSum = 0
 # fill list with summarized values from iteration blocks
@@ -46,7 +46,7 @@ def saveIterationSums():
         for j in range(iterBlockLineLength):
             for k in range(iterBlockLineLength):
                 kodeDataSums[j][k] += float(kodeData[itDataStartRow[i]+j][k])
-# write sums to kodeData_sums.dat
+# write list with sums to kodeData_sums.dat
     with open(os.path.join(nameSubdirectory, "{}_sums.dat".format(os.path.splitext(args.file)[0])), "w") as f:
         f.write(str(xSum) + "\n")
         f.writelines(line for line in [str(line) + "\n" for line in kodeDataSums])
