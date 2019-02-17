@@ -19,6 +19,7 @@ iterStepLineLength = len(kodeData[2])
 numberOfIterBlocks = int(kodeData[1][1])
 
 fileName = os.path.splitext(os.path.basename(args.file))[0]
+# check if sourcefile is in different path than script
 if args.file == os.path.basename(args.file):
     pathSubDir = os.path.abspath(kodeData[0][0])
 else:
