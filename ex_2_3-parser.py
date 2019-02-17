@@ -36,11 +36,9 @@ len(kodeData[lineNumber]) == iterBlockLineLength and len(kodeData[lineNumber-1])
 
 # check if subdirectory exists, create if it doens't
 def checkDirExist():
-    try:
+    if not os.path.isdir(pathSubDir):
         os.mkdir(pathSubDir)
-    except Exception:
-        pass
- 
+
 # write each iteration-block to a seperate files SOURCEFILE_iter#.dat
 def saveIterationsToFiles():
     for i in range(numberOfIterBlocks):
