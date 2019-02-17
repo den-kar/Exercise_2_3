@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
 
-import os.path
 import argparse
+import os.path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="type source file | default = kodeData.dat")
@@ -12,11 +12,18 @@ args = parser.parse_args()
 # get data from sourcefile stored in args.file, default = kodeData.dat
 with open("{}".format(args.file), "r") as f:
     kodeData = [line.split() for line in f]
-# save framing values for iteration-blocks from data sourcefile args.file 
-nameSubdirectory = os.path.abspath(kodeData[0][0])
+
+# save framing values for iteration-blocks from data sourcefile args.file and given parser argument
 iterBlockLineLength = int(kodeData[1][0])
 iterStepLineLength = len(kodeData[2])
 numberOfIterBlocks = int(kodeData[1][1])
+
+fileName = os.path.splitext(os.path.basename(args.file))[0]
+if args.file == os.path.basename(args.file):
+    pathSubDir = os.path.abspath(kodeData[0][0])
+else:
+    pathSubDir = os.path.join(args.file.rsplit("/", 1)[0], kodeData[0][0])
+
 # get start rows of iteration-blocks (Bedingung bissi random gewählt, aber hinreichend)
 itDataStartRow = [lineNumber for lineNumber in range(1, len(kodeData)) if \
 len(kodeData[lineNumber]) == iterBlockLineLength and len(kodeData[lineNumber-1]) == iterStepLineLength]
@@ -24,14 +31,14 @@ len(kodeData[lineNumber]) == iterBlockLineLength and len(kodeData[lineNumber-1])
 # check if subdirectory exists, create if it doens't
 def checkDirExist():
     try:
-        os.mkdir(nameSubdirectory)
+        os.mkdir(pathSubDir)
     except Exception:
         pass
  
 # write each iteration-block to a seperate files SOURCEFILE_iter#.dat
 def saveIterationsToFiles():
     for i in range(numberOfIterBlocks):
-        with open(os.path.join(nameSubdirectory, "{}_iter{}.dat".format(os.path.splitext(args.file)[0], i+1)), "w") as f:
+        with open(os.path.join(pathSubDir, "{}_iter{}.dat".format(fileName, i+1)), "w") as f:
             f.writelines(line for line in (\
     [" ".join(line) + "\n" for line in kodeData][int(itDataStartRow[i]):(int(itDataStartRow[i])+iterBlockLineLength)]))
 
@@ -47,7 +54,7 @@ def saveIterationSums():
             for k in range(iterBlockLineLength):
                 kodeDataSums[j][k] += float(kodeData[itDataStartRow[i]+j][k])
 # write list with sums to kodeData_sums.dat
-    with open(os.path.join(nameSubdirectory, "{}_sums.dat".format(os.path.splitext(args.file)[0])), "w") as f:
+    with open(os.path.join(pathSubDir, "{}_sums.dat".format(fileName)), "w") as f:
         f.write(str(xSum) + "\n")
         f.writelines(line for line in [str(line) + "\n" for line in kodeDataSums])
       
