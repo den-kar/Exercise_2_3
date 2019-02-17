@@ -4,7 +4,8 @@ import argparse
 import os.path
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="type source file | default = kodeData.dat")
+parser.add_argument("--file", "-f", nargs='?', default="kodeData.dat", help="type path of source file | default = kodeData.dat")
+parser.add_argument("--dest", "-d", nargs='?', default=False, help="type path to save in | default = Subdirectory at source file")
 parser.add_argument("--cut", "-c", action="store_true", help="ONLY cut iteration-blocks and save in seperate files")
 parser.add_argument("--sum", "-s", action="store_true", help="ONLY save interation-block with sums of interation-blocks")
 args = parser.parse_args()
@@ -20,11 +21,14 @@ iterStepLineLength = len(kodeData[2])
 numberOfIterBlocks = int(kodeData[1][1])
 
 nameFile = os.path.splitext(os.path.basename(args.file))[0]
-# check if sourcefile is in different path than script
-if args.file == os.path.basename(args.file):
-    pathSubDir = os.path.abspath(nameSubDir)
+# get path of directory to save in
+if args.dest != False:
+    pathSubDir = os.path.abspath(args.dest)
 else:
-    pathSubDir = os.path.join(args.file.rsplit("/", 1)[0], nameSubDir)
+    if args.file == os.path.basename(args.file):
+        pathSubDir = os.path.abspath(nameSubDir)
+    else:
+        pathSubDir = os.path.join(args.file.rsplit("/", 1)[0], nameSubDir)
 
 # get start rows of iteration-blocks (Bedingung bissi random gewählt, aber hinreichend)
 itDataStartRow = [lineNumber for lineNumber in range(1, len(kodeData)) if \
