@@ -57,7 +57,7 @@ def saveIterationSums():
         for j in range(iterBlockLineLength):
             for k in range(iterBlockLineLength):
                 kodeDataSums[j][k] += float(kodeData[itDataStartRow[i]+j][k])
-# write list with sums to kodeData_sums.dat
+# write list with sums to SOURCEFILE_sums.dat
     with open(os.path.join(pathSubDir, "{}_sums.dat".format(nameFile)), "w") as f:
         f.write(str(xSum) + "\n")
         f.writelines(line for line in [str(line) + "\n" for line in kodeDataSums])
